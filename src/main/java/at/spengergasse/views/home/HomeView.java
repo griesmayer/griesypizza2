@@ -1,8 +1,6 @@
 package at.spengergasse.views.home;
 
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
@@ -16,21 +14,37 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class HomeView extends VerticalLayout {
 
     public HomeView() {
-        setSpacing(false);
+        setSpacing(true);
 
-        Image img = new Image("images/empty-plant.png", "placeholder plant");
+        H1 companyName = new H1("Griesy Pizza");
+        companyName.getStyle()
+                .set("font-family", "cursive")
+                .set("font-size", "6rem")
+                .set("margin", "0");
+        add(companyName);
+
+        H2 subtitle = new H2("... the best pizza in the world ...");
+        subtitle.getStyle()
+                .set("margin", "0")
+                .set("color", "gray");
+        add(subtitle);
+
+        Image img = new Image("images/logo.png", "the logo of Griesy Pizza");
         img.setWidth("200px");
         add(img);
 
-        H2 header = new H2("This place intentionally left empty");
-        header.addClassNames(Margin.Top.XLARGE, Margin.Bottom.MEDIUM);
-        add(header);
-        add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
+        Paragraph description = new Paragraph("Griesy Pizza is a rich, indulgent pizza known for its extra cheese and slightly oily, flavorful topping layer. It features a crispy yet soft crust, loaded with melted cheese that creates a satisfying stretch, and toppings that release delicious juices, giving it that signature “greasy” shine. Perfect for those who love bold taste and a comforting, hearty bite.");
+        description.setWidth("500px");
+        description.getStyle()
+                .set("font-size", "22px")
+                .set("line-height", "1.6")
+                .set("text-align", "left");
+        add(description);
 
-        setSizeFull();
-        setJustifyContentMode(JustifyContentMode.CENTER);
-        setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        getStyle().set("text-align", "center");
+        H3 name = new H3("Griesy Pizza GmbH");
+        H3 street = new H3("Spengergasse 20");
+        H3 city = new H3("1050 Vienna");
+
+        add (name, street, city);
     }
-
 }
