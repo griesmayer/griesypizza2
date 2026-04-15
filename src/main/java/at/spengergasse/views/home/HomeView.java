@@ -26,7 +26,7 @@ public class HomeView extends VerticalLayout {
         img.setHeight("100px");
 
         Paragraph description = new Paragraph("Griesy Pizza is a rich, indulgent pizza known for its extra cheese and slightly oily, flavorful topping layer. It features a crispy yet soft crust, loaded with melted cheese that creates a satisfying stretch, and toppings that release delicious juices, giving it that signature “greasy” shine. Perfect for those who love bold taste and a comforting, hearty bite.");
-        description.setWidth("500px");
+        description.setWidth("1000px");
         description.getStyle()
                 .set("font-size", "22px")
                 .set("line-height", "1.6")
