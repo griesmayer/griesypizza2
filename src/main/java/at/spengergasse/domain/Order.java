@@ -2,6 +2,7 @@ package at.spengergasse.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,15 +18,32 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Order implements Cloneable {
     @Id
     private Long orderId;
+
+    @NotNull(message = "Order date is required!")
+    @PastOrPresent(message = "Order date must be now or in the past")
     private LocalDate orderDate;
+
+    @NotBlank(message = "The pizza is required")
+    @Size(min=2, max=20, message = "Wrong Pizza!")
     private String    pizza;
+
+    @NotNull(message = "Size is required!")
+    @Pattern(regexp = "Small|Medium|Large|Family", message = "Wrong size Small|Medium|Large|Family!")
     private String    size;
+
+    @NotNull(message = "Quantity is required!")
+    @Min(value = 1, message = "Min 1 pizza")
+    @Max(value = 5, message = "Max 5 pizzas")
     private Integer   quantity;
+
+    @NotNull(message = "The price is required!")
+    @DecimalMin(value = "5", message = "The min price is 5 EUR!")
     private Double    price;
+
+    @NotNull(message = "The garlic is required!")
     private Boolean   garlic;
 
     private static final AtomicLong sequence = new AtomicLong(1000);
-    private static final String[] sizes = { "Small", "Medium", "Large", "Family" };
 
     public Order(Long orderId, LocalDate orderDate, String pizza, String size, Integer quantity, Double price, Boolean garlic) {
         setOrderId (orderId);
@@ -52,18 +70,6 @@ public class Order implements Cloneable {
 
     public void setOrderId() {
         orderId = sequence.getAndIncrement();
-    }
-
-    public void setPrice(Double price) {
-        if (price.doubleValue() < 5)
-            throw new OrderException("Price to low!");
-        this.price = price;
-    }
-
-    public void setSize(String size) {
-        if (! Arrays.asList(sizes).contains(size) )
-            throw new OrderException("Wrong size!");
-        this.size = size;
     }
 
     @Override
