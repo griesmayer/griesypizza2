@@ -48,7 +48,7 @@ public class OrdersView extends VerticalLayout {
         buttonRemoveAllOrders.addClickListener(e -> removeAllOrders());
         buttonAdd10Orders.addClickListener(e -> add10Orders());
         buttonAddWrong.addClickListener(e-> addWrongOrder());
-        buttonAdd1Order.addClickListener(e -> add1Order());
+        buttonAdd1Order.addClickListener(e -> addChangeOrder(null));
         HorizontalLayout buttons = new HorizontalLayout(buttonRemoveAllOrders, buttonAdd10Orders, buttonAddWrong, buttonAdd1Order);
         buttons.setSpacing(true);
         setSizeFull();
@@ -107,15 +107,24 @@ public class OrdersView extends VerticalLayout {
                 .setHeader("Action")
                 .setSortable(false);
 
+        grid.addComponentColumn(o -> {
+            Button change1 = new Button("Change order");
+            change1.addClickListener(e-> addChangeOrder(o));
+            return change1;
+        })
+                .setHeader("Action")
+                .setSortable(false);
+
         grid.setSizeFull();
         add(buttons);
         add(grid);
         reload();
     }
 
-    private void add1Order() {
+    private void addChangeOrder(Order existingOrder) {
+        Order order;
         Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Add 1 Order");
+        dialog.setHeaderTitle(existingOrder!=null ? "Change the order" : "Add 1 Order");
 
         TextField orderId = new TextField("Order ID");
         orderId.setReadOnly(true);
@@ -133,6 +142,8 @@ public class OrdersView extends VerticalLayout {
                 .bind("orderDate");
         binder.forField(pizza)
                 .bind("pizza");
+        binder.forField(size)
+                .bind("size");
         binder.forField(quantity)
                 .bind("quantity");
         binder.forField(price)
@@ -140,8 +151,13 @@ public class OrdersView extends VerticalLayout {
         binder.forField(garlic)
                 .bind("garlic");
 
-        Order order = new Order();
-        order.setOrderId();
+        if (existingOrder == null) {
+            order = new Order();
+            order.setOrderId();
+        }
+        else {
+            order = existingOrder;
+        }
 
         orderId.setValue("" + order.getOrderId());
 
@@ -152,7 +168,8 @@ public class OrdersView extends VerticalLayout {
 
         ok.addClickListener(e -> {
             if (binder.validate().isOk()) {
-                orderService.addOrder(order);
+                if (existingOrder == null)
+                    orderService.addOrder(order);
                 reload();
                 dialog.close();
                 Notification.show("Pizza order saved");
@@ -168,7 +185,7 @@ public class OrdersView extends VerticalLayout {
         });
 
         HorizontalLayout buttons = new HorizontalLayout(ok, cancel);
-        VerticalLayout formLayout = new VerticalLayout(orderId, orderDate, pizza, quantity, price, garlic, buttons);
+        VerticalLayout formLayout = new VerticalLayout(orderId, orderDate, pizza, size, quantity, price, garlic, buttons);
 
         dialog.add(formLayout);
         dialog.open();
